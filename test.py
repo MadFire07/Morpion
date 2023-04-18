@@ -1,60 +1,79 @@
-import tkinter as tk
+# Import necessary libraries
+import numpy as np
+from keras.models import Sequential
+from keras.layers import Dense, Dropout
 
-class MorpionUI:
-    def init(self, master, on_click):
-        self.master = master
-        self.on_click = on_click
+# Define the game board
+board = np.zeros((3, 3))
 
-        self.buttons = []
-        for i in range(9):
-            button = tk.Button(self.master, text='', width=10, height=3,
-                               command=lambda i=i: self.on_click(i))
-            button.grid(row=i // 3, column=i % 3)
-            self.buttons.append(button)
+# Define the dataset
+X_train = []
+y_train = []
 
-    def update_button(self, index, text):
-        self.buttons[index].config(text=text, state='disabled')
 
-    def settitle(self, title):
-        self.master.title(title)
+# Simulate games and create the dataset
+def play_game():
+    global board
+    global X_train
+    global y_train
 
-class Morpion:
-    def init(self, master):
-        self.master = master
-        self.master.title("Morpion")
-        self.master.resizable(False, False)
+    # Start a new game
+    board = np.zeros((3, 3))
+    player = 1
 
-        self.turn = 'X'
-        self.board = ['' for  in range(9)]
-        self.ui = MorpionUI(self.master, self.on_click)
+    # Play until the game is over
+    while True:
+        # Generate the game state
+        state = board.reshape(9)
 
-    def on_click(self, index):
-        if self.board[index] == '' and not self.game_over():
-            self.ui.update_button(index, self.turn)
-            self.board[index] = self.turn
-            self.turn = 'O' if self.turn == 'X' else 'X'
+        # Generate the optimal move
+        optimal_move = np.random.choice(np.where(state == 0)[0])
 
-            if self.game_over():
-                self.ui.set_title("Morpion - Fin de la partie")
+        # Add the game state and optimal move to the dataset
+        X_train.append(state)
+        y_train.append(optimal_move)
 
-    def game_over(self):
-        winning_combinations = [(0, 1, 2), (3, 4, 5), (6, 7, 8),
-                                (0, 3, 6), (1, 4, 7), (2, 5, 8),
-                                (0, 4, 8), (2, 4, 6)]
+        # Make the move
+        row = optimal_move // 3
+        col = optimal_move % 3
+        board[row][col] = player
 
-        for a, b, c in winning_combinations:
-            if self.board[a] and self.board[a] == self.board[b] == self.board[c]:
-                return True
+        # Check if the game is over
+        if check_win() != 0:
+            break
 
-        if all(cell != '' for cell in self.board):
-            return True
+        # Switch to the other player
+        player = 3 - player
 
-        return False
 
-def main():
-    root = tk.Tk()
-    Morpion(root)
-    root.mainloop()
+# Check if there is a winner
+def check_win():
+    global board
 
-if __name__ == 'main':
-    main()
+    # Check rows
+    for row in range(3):
+        if board[row][0] == board[row][1] == board[row][2] != 0:
+            return board[row][0]
+
+    # Check columns
+    for col in range(3):
+        if board[0][col] == board[1][col] == board[2][col] != 0:
+            return board[0][col]
+
+    # Check diagonals
+    if board[0][0] == board[1][1] == board[2][2] != 0:
+        return board[0][0]
+    if board[0][2] == board[1][1] == board[2][0] != 0:
+        return board[0][2]
+
+    # Check for a tie
+    if np.all(board != 0):
+        return -1
+
+    # No winner yet
+    return 0
+
+
+# Simulate many games to create the dataset
+for i in range(100000):
+    play_game
