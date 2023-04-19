@@ -1,7 +1,8 @@
 import tkinter as tk
 from tkinter import messagebox
-import random
-
+import csv
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # Fonction pour vérifier si un joueur a gagné
 def check_win(board, player):
@@ -74,9 +75,11 @@ def on_click(row, col):
             button[row][col].configure(text="X", fg="red")
             if check_win(board, current_player):
                 messagebox.showinfo("Victoire", f"Le joueur {current_player} a gagné !")
+                save_game(current_player)
                 return
             elif all([x != 0 for row in board for x in row]):
                 messagebox.showinfo("Match nul", "Match nul !")
+                save_game(0)
                 return
             else:
                 current_player = 3 - current_player
@@ -86,9 +89,11 @@ def on_click(row, col):
                     button[ai_move[0]][ai_move[1]].configure(text="O", fg="blue")
                     if check_win(board, current_player):
                         messagebox.showinfo("Victoire", f"Le joueur {current_player} a gagné !")
+                        save_game(current_player)
                         return
                     elif all([x != 0 for row in board for x in row]):
                         messagebox.showinfo("Match nul", "Match nul !")
+                        save_game(0)
                         return
                 current_player = 3 - current_player
 
@@ -126,6 +131,51 @@ def graphics():
 
     quit_button = tk.Button(window, text="Quit", width=10, height=2, command=window.destroy)
     quit_button.grid(row=4, column=0, columnspan=3)
+
+    # Créer un bouton pour afficher les statistiques
+
+    stats_button = tk.Button(window, text="Stats", width=10, height=2, command=graph)
+    stats_button.grid(row=5, column=0, columnspan=3)
+
+
+# mettre le resultat de la partie dans un fichier csv
+def save_game(winner):
+    print(winner)
+    database = board + [str(winner)]
+    with open('data.csv', 'a') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(database)
+        csvfile.close()
+
+
+def graph():
+    global victoires_x, victoires_o, egalites
+    victoires_x = 0
+    victoires_o = 0
+    egalites = 0
+    with open('data.csv', 'r') as graph:
+        reader = csv.reader(graph)
+        data = list(reader)
+        graph.close()
+    for ligne in data:
+        result = ligne[3]
+        if result == str(1):
+            victoires_x += 1
+        elif result == str(2):
+            victoires_o += 1
+        elif result == str(0):
+            egalites += 1
+
+    total_victoires = victoires_x + victoires_o + egalites
+    x = ['X', 'O', 'Égalités']
+    y = [victoires_x / total_victoires * 100, victoires_o / total_victoires * 100, egalites / total_victoires * 100]
+    colors = ['red', 'blue', 'green']
+
+    plt.bar(x, y, color=colors)
+    plt.xlabel("Joueur")
+    plt.ylabel("Pourcentage de victoires")
+    plt.title("Comparaison des victoires entre X et O (en pourcentage)")
+    plt.show()
 
 
 # Initialiser le jeu
