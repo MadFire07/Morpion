@@ -103,6 +103,7 @@ def reset_game():
     global current_player, board
     current_player = 1
     board = [[0] * 3 for _ in range(3)]
+    pd.DataFrame(board)
     for i in range(3):
         for j in range(3):
             button[i][j].configure(text="", state="normal")
@@ -113,6 +114,10 @@ def graphics():
     global window, button
     window = tk.Tk()
     window.title("Morpion")
+
+    # Créer un titre pour la fenêtre
+    title = tk.Label(window, text="Morpion", font=("Arial", 20))
+    title.grid(row=0, column=0, columnspan=3, pady=2)
 
     # Créer une grille de boutons pour représenter le morpion
     button = [[0] * 3 for _ in range(3)]
@@ -125,17 +130,17 @@ def graphics():
     # Créer un bouton pour réinitialiser le jeu
 
     reset_button = tk.Button(window, text="Restart", width=10, height=2, command=reset_game)
-    reset_button.grid(row=3, column=0, columnspan=3)
+    reset_button.grid(row=3, column=0, columnspan=3, pady=2)
 
     # Créer un bouton pour quitter le jeu
 
     quit_button = tk.Button(window, text="Quit", width=10, height=2, command=window.destroy)
-    quit_button.grid(row=4, column=0, columnspan=3)
+    quit_button.grid(row=4, column=0, columnspan=3, pady=2)
 
     # Créer un bouton pour afficher les statistiques
 
     stats_button = tk.Button(window, text="Stats", width=10, height=2, command=graph)
-    stats_button.grid(row=5, column=0, columnspan=3)
+    stats_button.grid(row=5, column=0, columnspan=3, pady=2)
 
 
 # mettre le resultat de la partie dans un fichier csv
@@ -149,14 +154,14 @@ def save_game(winner):
 
 
 def graph():
-    global victoires_x, victoires_o, egalites
     victoires_x = 0
     victoires_o = 0
     egalites = 0
-    with open('data.csv', 'r') as graph:
-        reader = csv.reader(graph)
+
+    with open('data.csv', 'r') as file:
+        reader = csv.reader(file)
         data = list(reader)
-        graph.close()
+        file.close()
     for ligne in data:
         result = ligne[3]
         if result == str(1):
