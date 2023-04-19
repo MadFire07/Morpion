@@ -4,7 +4,7 @@ window = tk.Tk()
 window.title("Morpion")
 window.configure(background='white')
 window.geometry("1200x900")
-titre = tk.Label(window, text="Morpion", font=("Arial", 30, "bold"), bg="white", fg="black", width=20, height=2)
+titre = tk.Label(window, text="Morpion", font=("Arial", 30, "bold"), bg="white", fg="black", width=20, height=3)
 titre.grid(row=0, column=0, columnspan=3, padx=200, pady=5)
 
 largGrl = 600
