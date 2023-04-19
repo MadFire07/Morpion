@@ -4,6 +4,7 @@ import csv
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 # Fonction pour vérifier si un joueur a gagné
 def check_win(board, player):
     for i in range(3):
@@ -88,7 +89,7 @@ def on_click(row, col):
                     board[ai_move[0]][ai_move[1]] = current_player
                     button[ai_move[0]][ai_move[1]].configure(text="O", fg="blue")
                     if check_win(board, current_player):
-                        messagebox.showinfo("Victoire", f"Le joueur {current_player} a gagné !")
+                        messagebox.showinfo("Victoire", f"L'Ordinateur a gagné !")
                         save_game(current_player)
                         return
                     elif all([x != 0 for row in board for x in row]):
