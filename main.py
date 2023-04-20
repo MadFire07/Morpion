@@ -23,33 +23,55 @@ def check_win(board, player):
 
 
 def minimax(board, depth, maximizing_player):
+    # Vérifie si le joueur 1 a gagné, retourne -1
     if check_win(board, 1):
         return -1
+    # Vérifie si le joueur 2 a gagné, retourne 1
     elif check_win(board, 2):
         return 1
+    # Vérifie si le plateau est plein, retourne 0 pour un match nul
     elif all([x != 0 for row in board for x in row]):
         return 0
 
     if maximizing_player:
+        # Initialisation du score maximal à -infini
         max_eval = float('-inf')
+        # Parcourt chaque case du plateau de jeu
         for i in range(3):
             for j in range(3):
+                # Vérifie si la case est vide
                 if board[i][j] == 0:
+                    # Place le symbole du joueur maximisant dans la case
                     board[i][j] = 2
+                    # Appelle récursivement la fonction minimax avec le plateau mis à jour
+                    # et le joueur suivant (minimisant)
                     eval = minimax(board, depth + 1, False)
+                    # Réinitialise la case à sa valeur d'origine
                     board[i][j] = 0
+                    # Met à jour le score maximal
                     max_eval = max(max_eval, eval)
+        # Retourne le score maximal trouvé
         return max_eval
     else:
+        # Initialisation du score minimal à +infini
         min_eval = float('inf')
+        # Parcourt chaque case du plateau de jeu
         for i in range(3):
             for j in range(3):
+                # Vérifie si la case est vide
                 if board[i][j] == 0:
+                    # Place le symbole du joueur minimisant dans la case
                     board[i][j] = 1
+                    # Appelle récursivement la fonction minimax avec le plateau mis à jour
+                    # et le joueur suivant (maximisant)
                     eval = minimax(board, depth + 1, True)
+                    # Réinitialise la case à sa valeur d'origine
                     board[i][j] = 0
+                    # Met à jour le score minimal
                     min_eval = min(min_eval, eval)
+        # Retourne le score minimal trouvé
         return min_eval
+
 
 
 def best_move(board):
