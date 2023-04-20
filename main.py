@@ -73,7 +73,6 @@ def minimax(board, depth, maximizing_player):
         return min_eval
 
 
-
 def best_move(board):
     max_eval = float('-inf')
     move = None
@@ -97,7 +96,8 @@ def on_click(row, col):
         if current_player == 1:  # si c'est le joueur 1
             button[row][col].configure(text="X", fg="red")  # configure le texte et la couleur de la case
             if check_win(board, current_player):  # vérifie si le joueur a gagné
-                messagebox.showinfo("Victoire", f"Le joueur {current_player} a gagné !")  # affiche un message de victoire
+                messagebox.showinfo("Victoire",
+                                    f"Le joueur {current_player} a gagné !")  # affiche un message de victoire
                 save_game(current_player)  # sauvegarde la partie
                 return  # termine la fonction
             elif all([x != 0 for row in board for x in row]):  # vérifie si toutes les cases sont remplies
@@ -109,7 +109,8 @@ def on_click(row, col):
                 ai_move = best_move(board)  # l'ordinateur joue
                 if ai_move:  # si l'ordinateur a trouvé un coup valide
                     board[ai_move[0]][ai_move[1]] = current_player  # met le symbole de l'ordinateur sur la case
-                    button[ai_move[0]][ai_move[1]].configure(text="O", fg="blue")  # configure le texte et la couleur de la case
+                    button[ai_move[0]][ai_move[1]].configure(text="O",
+                                                             fg="blue")  # configure le texte et la couleur de la case
                     if check_win(board, current_player):  # vérifie si l'ordinateur a gagné
                         messagebox.showinfo("Victoire", f"L'Ordinateur a gagné !")  # affiche un message de victoire
                         save_game(current_player)  # sauvegarde la partie
@@ -119,7 +120,6 @@ def on_click(row, col):
                         save_game(0)  # sauvegarde la partie
                         return  # termine la fonction
                 current_player = 3 - current_player  # change de joueur
-
 
 
 # Fonction pour réinitialiser le jeu
