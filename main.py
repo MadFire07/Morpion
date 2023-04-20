@@ -91,34 +91,35 @@ def best_move(board):
 
 # Fonction pour gérer le clic sur une case
 def on_click(row, col):
-    global current_player
-    if board[row][col] == 0:
-        board[row][col] = current_player
-        if current_player == 1:
-            button[row][col].configure(text="X", fg="red")
-            if check_win(board, current_player):
-                messagebox.showinfo("Victoire", f"Le joueur {current_player} a gagné !")
-                save_game(current_player)
-                return
-            elif all([x != 0 for row in board for x in row]):
-                messagebox.showinfo("Match nul", "Match nul !")
-                save_game(0)
-                return
-            else:
-                current_player = 3 - current_player
-                ai_move = best_move(board)
-                if ai_move:
-                    board[ai_move[0]][ai_move[1]] = current_player
-                    button[ai_move[0]][ai_move[1]].configure(text="O", fg="blue")
-                    if check_win(board, current_player):
-                        messagebox.showinfo("Victoire", f"L'Ordinateur a gagné !")
-                        save_game(current_player)
-                        return
-                    elif all([x != 0 for row in board for x in row]):
-                        messagebox.showinfo("Match nul", "Match nul !")
-                        save_game(0)
-                        return
-                current_player = 3 - current_player
+    global current_player  # utilise la variable globale 'current_player'
+    if board[row][col] == 0:  # si la case est vide
+        board[row][col] = current_player  # met le symbole du joueur courant sur la case
+        if current_player == 1:  # si c'est le joueur 1
+            button[row][col].configure(text="X", fg="red")  # configure le texte et la couleur de la case
+            if check_win(board, current_player):  # vérifie si le joueur a gagné
+                messagebox.showinfo("Victoire", f"Le joueur {current_player} a gagné !")  # affiche un message de victoire
+                save_game(current_player)  # sauvegarde la partie
+                return  # termine la fonction
+            elif all([x != 0 for row in board for x in row]):  # vérifie si toutes les cases sont remplies
+                messagebox.showinfo("Match nul", "Match nul !")  # affiche un message de match nul
+                save_game(0)  # sauvegarde la partie
+                return  # termine la fonction
+            else:  # si la partie n'est pas terminée
+                current_player = 3 - current_player  # change de joueur
+                ai_move = best_move(board)  # l'ordinateur joue
+                if ai_move:  # si l'ordinateur a trouvé un coup valide
+                    board[ai_move[0]][ai_move[1]] = current_player  # met le symbole de l'ordinateur sur la case
+                    button[ai_move[0]][ai_move[1]].configure(text="O", fg="blue")  # configure le texte et la couleur de la case
+                    if check_win(board, current_player):  # vérifie si l'ordinateur a gagné
+                        messagebox.showinfo("Victoire", f"L'Ordinateur a gagné !")  # affiche un message de victoire
+                        save_game(current_player)  # sauvegarde la partie
+                        return  # termine la fonction
+                    elif all([x != 0 for row in board for x in row]):  # vérifie si toutes les cases sont remplies
+                        messagebox.showinfo("Match nul", "Match nul !")  # affiche un message de match nul
+                        save_game(0)  # sauvegarde la partie
+                        return  # termine la fonction
+                current_player = 3 - current_player  # change de joueur
+
 
 
 # Fonction pour réinitialiser le jeu
